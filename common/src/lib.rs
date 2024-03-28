@@ -8,6 +8,10 @@ pub struct PacketLog {
     pub port_destination: u16,
     pub port_source: u16,
     pub fin_flag: u8,
+    pub length: u16,
+    pub protocol: u8,
+    pub header_length: u8,
+    pub data_length: u16,
 }
 
 #[cfg(feature = "user")]

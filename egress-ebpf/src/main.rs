@@ -64,10 +64,26 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
     let destination_port;
 
     let fin_flag: u8;
+
+    let header_length: u8;
+    let data_length: u16 = (ctx.data_end() - ctx.data()) as u16;
+    let length: u16;
+    let protocol = ipv4hdr.proto as u8;
     
     match ipv4hdr.proto {
         IpProto::Tcp => {
             let tcphdr: TcpHdr = ctx.load(EthHdr::LEN + Ipv4Hdr::LEN).map_err(|_| ())?;
+            let tcphdr_ptr: *const TcpHdr = unsafe { ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN) }?;
+
+            let tcphdr_u8 = tcphdr_ptr as *const u8;
+            let data_offset_byte = unsafe { *tcphdr_u8.add(12) } as u8;
+            let data_offset = (data_offset_byte >> 4) as u8;
+            header_length = data_offset * 4;
+
+            length = data_length as u16
+                + header_length as u16
+                + Ipv4Hdr::LEN as u16
+                + EthHdr::LEN as u16;
 
             source_port = u16::from_be(tcphdr.source);
             destination_port = u16::from_be(tcphdr.dest);
@@ -78,6 +94,12 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
             let udphdr: UdpHdr = ctx.load(EthHdr::LEN + Ipv4Hdr::LEN).map_err(|_| ())?;
             source_port = u16::from_be(udphdr.source);
             destination_port = u16::from_be(udphdr.dest);
+
+            header_length = UdpHdr::LEN as u8;
+            length = data_length as u16
+                + header_length as u16
+                + Ipv4Hdr::LEN as u16
+                + EthHdr::LEN as u16;
 
             fin_flag = 0;
             
@@ -91,6 +113,10 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
         port_destination: destination_port,
         port_source: source_port,
         fin_flag: fin_flag,
+        length: length,
+        protocol: protocol,
+        header_length: header_length,
+        data_length: data_length,
     };
 
     EVENTS_EGRESS.output(&ctx, &flow, 0);
