@@ -79,12 +79,13 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
     match ipv4hdr.proto {
         IpProto::Tcp => {
             let tcphdr: TcpHdr = ctx.load(EthHdr::LEN + Ipv4Hdr::LEN).map_err(|_| ())?;
-            let tcphdr_ptr: *const TcpHdr = unsafe { ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN) }?;
+            // let tcphdr_ptr: *const TcpHdr = unsafe { ptr_at(&ctx, EthHdr::LEN + Ipv4Hdr::LEN) }?;
 
-            let tcphdr_u8 = tcphdr_ptr as *const u8;
-            let data_offset_byte = unsafe { *tcphdr_u8.add(12) } as u8;
-            let data_offset = (data_offset_byte >> 4) as u8;
-            header_length = data_offset * 4;
+            // let tcphdr_u8 = tcphdr_ptr as *const u8;
+            // let data_offset_byte = unsafe { *tcphdr_u8.add(12) } as u8;
+            // let data_offset = (data_offset_byte >> 4) as u8;
+            // header_length = data_offset * 4;
+            header_length = TcpHdr::LEN as u8;
 
             length = data_length as u16
                 + header_length as u16
