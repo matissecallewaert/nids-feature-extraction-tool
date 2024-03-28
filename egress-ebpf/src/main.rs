@@ -68,7 +68,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
 
     let header_length: u32;
     let data_length: usize = ctx.data_end() - ctx.data();
-    let length: u32;
+    //let length: u32;
     
     match ipv4hdr.proto {
         IpProto::Tcp => {
@@ -84,10 +84,10 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
             // Calculate the TCP header size in bytes
             header_length = data_offset * 4;
 
-            length = data_length as u32
-                + header_length as u32
-                + Ipv4Hdr::LEN as u32
-                + EthHdr::LEN as u32;
+            // length = data_length as u32
+            //     + header_length as u32
+            //     + Ipv4Hdr::LEN as u32
+            //     + EthHdr::LEN as u32;
 
             source_port = u16::from_be(tcphdr.source);
             destination_port = u16::from_be(tcphdr.dest);
@@ -101,10 +101,10 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
 
             header_length = UdpHdr::LEN as u32;
             
-            length = data_length as u32
-                + header_length as u32
-                + Ipv4Hdr::LEN as u32
-                + EthHdr::LEN as u32;
+            // length = data_length as u32
+            //     + header_length as u32
+            //     + Ipv4Hdr::LEN as u32
+            //     + EthHdr::LEN as u32;
 
             //fin_flag_count = 0;
         }
