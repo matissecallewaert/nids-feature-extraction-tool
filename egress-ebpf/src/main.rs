@@ -73,7 +73,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
 
     let header_length: u8;
     let data_length: u16 = (ctx.data_end() - ctx.data()) as u16;
-    let length: u16;
+    // let length: u16;
     let protocol = ipv4hdr.proto as u8;
     
     match ipv4hdr.proto {
@@ -86,10 +86,10 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
             let data_offset = (data_offset_byte >> 4) as u8;
             header_length = data_offset * 4;
 
-            length = data_length as u16
-                + header_length as u16
-                + Ipv4Hdr::LEN as u16
-                + EthHdr::LEN as u16;
+            // length = data_length as u16
+            //     + header_length as u16
+            //     + Ipv4Hdr::LEN as u16
+            //     + EthHdr::LEN as u16;
 
             source_port = u16::from_be(tcphdr.source);
             destination_port = u16::from_be(tcphdr.dest);
@@ -108,10 +108,10 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
             destination_port = u16::from_be(udphdr.dest);
 
             header_length = UdpHdr::LEN as u8;
-            length = data_length as u16
-                + header_length as u16
-                + Ipv4Hdr::LEN as u16
-                + EthHdr::LEN as u16;
+            // length = data_length as u16
+            //     + header_length as u16
+            //     + Ipv4Hdr::LEN as u16
+            //     + EthHdr::LEN as u16;
 
             fin_flag = 0;
             syn_flag = 0;
