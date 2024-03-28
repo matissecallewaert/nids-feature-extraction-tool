@@ -119,8 +119,8 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
         protocol: protocol,
         header_length: header_length,
         data_length: data_length as u32,
-        length: length,
-        //fin_flag: 0,
+        //length: length,
+        fin_flag: 0,
     };
 
     // the zero value is a flag

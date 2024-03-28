@@ -10,8 +10,8 @@ pub struct PacketLog {
     pub protocol: u8,
     pub header_length: u32,
     pub data_length: u32,
-    pub length: u32,
-    //pub fin_flag: u16,
+    //pub length: u32,
+    pub fin_flag: u16,
 }
 
 #[cfg(feature = "user")]
