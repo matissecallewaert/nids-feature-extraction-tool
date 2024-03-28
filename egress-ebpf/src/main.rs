@@ -69,7 +69,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
     let data_length: u16 = (ctx.data_end() - ctx.data()) as u16;
     let length: u16;
     let protocol = ipv4hdr.proto as u8;
-    let window_size: u16;
+    let window_size: u8;
     
     match ipv4hdr.proto {
         IpProto::Tcp => {
@@ -93,7 +93,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
                          ((tcphdr.psh() as u8) << 3) | ((tcphdr.ack() as u8) << 4) | ((tcphdr.urg() as u8) << 5) | 
                          ((tcphdr.ece() as u8) << 6) | ((tcphdr.cwr() as u8) << 7);
             
-            window_size = tcphdr.window;
+            window_size = tcphdr.window as u8;
 
         }
         IpProto::Udp => {
