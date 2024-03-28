@@ -143,10 +143,11 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
                     let rst_flag = data.rst_flag;
                     let psh_flag = data.psh_flag;
                     let ack_flag = data.ack_flag;
+                    let urg_flag = data.urg_flag;
 
                     println!(
-                        "LOG: SRC {}:{}, DST {}:{}, FIN {}, SYN {}, RST {} PSH {}, ACK {}, PROTOCOL {}, HEADER LENGTH {}, DATA LENGTH {}, LENGTH {}",
-                        src_addr, src_port, dst_addr, dst_port, fin_flag, syn_flag, rst_flag, psh_flag, ack_flag, protocol, header_length, data_length, length
+                        "LOG: SRC {}:{}, DST {}:{}, FIN {}, SYN {}, RST {} PSH {}, ACK {}, URG {}, PROTOCOL {}, HEADER LENGTH {}, DATA LENGTH {}, LENGTH {}",
+                        src_addr, src_port, dst_addr, dst_port, fin_flag, syn_flag, rst_flag, psh_flag, ack_flag, urg_flag, protocol, header_length, data_length, length
                     );
                 }
             }
