@@ -89,6 +89,7 @@ fn try_xdp_flow_track(ctx: XdpContext) -> Result<u32, ()>{
         header_length: 0,
         data_length: 0,
         combined_flags: 0,
+        window_size: 0,
     };
 
     // the zero value is a flag

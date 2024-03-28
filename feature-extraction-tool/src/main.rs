@@ -141,6 +141,8 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
 
                     let combined_flags = data.combined_flags;
 
+                    let window_size = data.window_size;
+
                     let fin_flag_flags = ((combined_flags & 0b00000001) != 0) as u8;
                     let syn_flag_flags = ((combined_flags & 0b00000010) != 0) as u8;
                     let rst_flag_flags = ((combined_flags & 0b00000100) != 0) as u8;
@@ -151,8 +153,8 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
                     let cwr_flag_flags = ((combined_flags & 0b10000000) != 0) as u8;
 
                     println!(
-                        "LOG: SRC {}:{}, DST {}:{}, FIN {}, SYN {}, RST {}, PSH {}, ACK {}, URG {}, CWR {}, ECE {}, PROTOCOL {}, HEADER LENGTH {}, DATA LENGTH {}, LENGTH {}",
-                        src_addr, src_port, dst_addr, dst_port, fin_flag_flags, syn_flag_flags, rst_flag_flags, psh_flag_flags, ack_flag_flags, urg_flag_flags, cwr_flag_flags, ece_flag_flags, protocol, header_length, data_length, length
+                        "LOG: SRC {}:{}, DST {}:{}, FIN {}, SYN {}, RST {}, PSH {}, ACK {}, URG {}, CWR {}, ECE {}, PROTOCOL {}, HEADER LENGTH {}, DATA LENGTH {}, LENGTH {}, WINDOW SIZE {}",
+                        src_addr, src_port, dst_addr, dst_port, fin_flag_flags, syn_flag_flags, rst_flag_flags, psh_flag_flags, ack_flag_flags, urg_flag_flags, cwr_flag_flags, ece_flag_flags, protocol, header_length, data_length, length, window_size
                     );
                 }
             }

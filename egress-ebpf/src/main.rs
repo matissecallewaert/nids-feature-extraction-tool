@@ -69,6 +69,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
     let data_length: u16 = (ctx.data_end() - ctx.data()) as u16;
     let length: u16;
     let protocol = ipv4hdr.proto as u8;
+    let mut window_size: u16 = 0;
     
     match ipv4hdr.proto {
         IpProto::Tcp => {
@@ -101,6 +102,8 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
             combined_flags = (fin_flag << 0) | (syn_flag << 1) | (rst_flag << 2) | 
                          (psh_flag << 3) | (ack_flag << 4) | (urg_flag << 5) | 
                          (ece_flag << 6) | (cwr_flag << 7);
+            
+            window_size = u16::from_be(tcphdr.window);
 
         }
         IpProto::Udp => {
@@ -129,6 +132,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
         protocol: protocol,
         header_length: header_length,
         data_length: data_length,
+        window_size: window_size,
     };
 
     EVENTS_EGRESS.output(&ctx, &flow, 0);
