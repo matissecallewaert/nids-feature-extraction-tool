@@ -70,6 +70,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
     let ack_flag: u8;
     let urg_flag: u8;
     let cwr_flag: u8;
+    let ece_flag: u8;
 
     let header_length: u8;
     let data_length: u16 = (ctx.data_end() - ctx.data()) as u16;
@@ -101,7 +102,8 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
             psh_flag = tcphdr.psh() as u8;
             ack_flag = tcphdr.ack() as u8;
             urg_flag = tcphdr.urg() as u8;
-            cwr_flag = tcphdr.ece() as u8;
+            cwr_flag = tcphdr.cwr() as u8;
+            ece_flag = tcphdr.ece() as u8;
         }
         IpProto::Udp => {
             let udphdr: UdpHdr = ctx.load(EthHdr::LEN + Ipv4Hdr::LEN).map_err(|_| ())?;
