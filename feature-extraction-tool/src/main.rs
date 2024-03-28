@@ -126,10 +126,11 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
                     let protocol = data.protocol;
                     let header_length = data.header_length;
                     let data_length = data.data_length;
+                    let length = data.length;
 
                     println!(
-                        "LOG: SRC {}:{}, DST {}:{}, PROTOCOL {}, HEADER LENGTH {}, D_LENGTH {}",
-                        src_addr, src_port, dst_addr, dst_port, protocol, header_length, data_length
+                        "LOG: SRC {}:{}, DST {}:{}, PROTOCOL {}, HEADER LENGTH {}, D_LENGTH {}, LENGTH {}",
+                        src_addr, src_port, dst_addr, dst_port, protocol, header_length, data_length, length
                     );
                 }
             }
