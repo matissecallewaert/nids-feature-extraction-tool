@@ -64,7 +64,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
     let destination_port;
     let protocol = ipv4hdr.proto as u8;
 
-    let fin_flag_count: u8;
+    let fin_flag_count: u16;
 
     let header_length: u32;
     let data_length: usize = ctx.data_end() - ctx.data();
@@ -92,7 +92,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
             source_port = u16::from_be(tcphdr.source);
             destination_port = u16::from_be(tcphdr.dest);
 
-            fin_flag_count = (tcphdr.fin() != 0) as u8;
+            fin_flag_count = tcphdr.fin();
         }
         IpProto::Udp => {
             let udphdr: UdpHdr = ctx.load(EthHdr::LEN + Ipv4Hdr::LEN).map_err(|_| ())?;
