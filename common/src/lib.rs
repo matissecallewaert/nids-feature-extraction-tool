@@ -7,7 +7,7 @@ pub struct PacketLog {
     pub ipv4_source: u32,
     pub port_destination: u16,
     pub port_source: u16,
-    pub fin_flag: u16,
+    pub fin_flag: u8,
 }
 
 #[cfg(feature = "user")]

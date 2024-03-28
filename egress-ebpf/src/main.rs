@@ -62,6 +62,8 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
 
     let source_port;
     let destination_port;
+
+    let fin_flag: u8;
     
     match ipv4hdr.proto {
         IpProto::Tcp => {
@@ -69,11 +71,15 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
 
             source_port = u16::from_be(tcphdr.source);
             destination_port = u16::from_be(tcphdr.dest);
+
+            fin_flag = tcphdr.fin() as u8;
         }
         IpProto::Udp => {
             let udphdr: UdpHdr = ctx.load(EthHdr::LEN + Ipv4Hdr::LEN).map_err(|_| ())?;
             source_port = u16::from_be(udphdr.source);
             destination_port = u16::from_be(udphdr.dest);
+
+            fin_flag = 0;
             
         }
         _ => return Ok(TC_ACT_PIPE),
@@ -84,7 +90,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
         ipv4_source: ipv4_source,
         port_destination: destination_port,
         port_source: source_port,
-        fin_flag: 0,
+        fin_flag: fin_flag,
     };
 
     EVENTS_EGRESS.output(&ctx, &flow, 0);
