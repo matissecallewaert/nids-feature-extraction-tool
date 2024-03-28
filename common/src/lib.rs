@@ -13,6 +13,7 @@ pub struct PacketLog {
     pub psh_flag: u8,
     pub ack_flag: u8,
     pub urg_flag: u8,
+    pub cwr_flag: u8,
     pub length: u16,
     pub protocol: u8,
     pub header_length: u8,
