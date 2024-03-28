@@ -47,6 +47,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
 
     let source_port;
     let destination_port;
+    let protocol = ipv4hdr.proto as u8;
     match ipv4hdr.proto {
         IpProto::Tcp => {
             let tcphdr: TcpHdr = ctx.load(EthHdr::LEN + Ipv4Hdr::LEN).map_err(|_| ())?;
@@ -66,6 +67,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
         ipv4_source: ipv4_source,
         port_destination: destination_port,
         port_source: source_port,
+        protocol: protocol,
     };
 
     // the zero value is a flag
