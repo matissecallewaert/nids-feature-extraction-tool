@@ -21,7 +21,7 @@ use bytes::BytesMut;
 use clap::Parser;
 use common::PacketLog;
 use core::panic;
-use log::{info, warn};
+use log::{debug, info, warn};
 use std::net::Ipv4Addr;
 use tokio::{signal, task};
 
@@ -43,6 +43,17 @@ async fn main() {
 
 async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
     env_logger::init();
+
+    // Bump the memlock rlimit. This is needed for older kernels that don't use the
+    // new memcg based accounting, see https://lwn.net/Articles/837122/
+    let rlim = libc::rlimit {
+        rlim_cur: libc::RLIM_INFINITY,
+        rlim_max: libc::RLIM_INFINITY,
+    };
+    let ret = unsafe { libc::setrlimit(libc::RLIMIT_MEMLOCK, &rlim) };
+    if ret != 0 {
+        debug!("remove limit on locked memory failed, ret is: {}", ret);
+    }
 
     // This will include your eBPF object file as raw bytes at compile-time and load it at
     // runtime. This approach is recommended for most real-world use cases. If you would
@@ -126,16 +137,16 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
                     let protocol = data.protocol;
                     let header_length = data.header_length;
                     let data_length = data.data_length;
-                    //let length = data.length;
+                    let length = data.length;
                     let fin_flag = data.fin_flag;
                     let syn_flag = data.syn_flag;
                     let rst_flag = data.rst_flag;
                     let psh_flag = data.psh_flag;
-                    //let ack_flag = data.ack_flag;
+                    let ack_flag = data.ack_flag;
 
                     println!(
-                        "LOG: SRC {}:{}, DST {}:{}, FIN {}, SYN {}, RST {} PSH {}, PROTOCOL {}, HEADER LENGTH {}, DATA LENGTH {}",
-                        src_addr, src_port, dst_addr, dst_port, fin_flag, syn_flag, rst_flag, psh_flag, protocol, header_length, data_length
+                        "LOG: SRC {}:{}, DST {}:{}, FIN {}, SYN {}, RST {} PSH {}, ACK {}, PROTOCOL {}, HEADER LENGTH {}, DATA LENGTH {}, LENGTH {}",
+                        src_addr, src_port, dst_addr, dst_port, fin_flag, syn_flag, rst_flag, psh_flag, ack_flag, protocol, header_length, data_length, length
                     );
                 }
             }
