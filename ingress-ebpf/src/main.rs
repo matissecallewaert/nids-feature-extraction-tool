@@ -85,13 +85,14 @@ fn try_xdp_flow_track(ctx: XdpContext) -> Result<u32, ()>{
         port_destination: destination_port,
         port_source: source_port,
         fin_flag: 0,
-        length: 0,
+        //length: 0,
         protocol: 0,
         header_length: 0,
         data_length: 0,
         syn_flag: 0,
         rst_flag: 0,
         psh_flag: 0,
+        ack_flag: 0,
     };
 
     // the zero value is a flag
