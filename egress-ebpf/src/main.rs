@@ -64,7 +64,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
     let destination_port;
     let protocol = ipv4hdr.proto as u8;
 
-    let mut fin_flag_count = 0 as u8;
+    let fin_flag_count: u8;
 
     let header_length: u32;
     let data_length: usize = ctx.data_end() - ctx.data();
@@ -105,6 +105,8 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
                 + header_length as u32
                 + Ipv4Hdr::LEN as u32
                 + EthHdr::LEN as u32;
+
+            fin_flag_count = 0;
         }
         _ => return Ok(TC_ACT_PIPE),
     };
