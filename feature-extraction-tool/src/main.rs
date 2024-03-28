@@ -141,7 +141,7 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
 
                     let combined_flags = data.combined_flags;
 
-                    //let window_size = data.window_size;
+                    let window_size = data.window_size;
 
                     let fin_flag_flags = ((combined_flags & 0b00000001) != 0) as u8;
                     let syn_flag_flags = ((combined_flags & 0b00000010) != 0) as u8;

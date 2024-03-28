@@ -133,7 +133,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
         protocol: protocol,
         header_length: header_length,
         data_length: data_length,
-        //window_size: window_size,
+        window_size: window_size,
     };
 
     EVENTS_EGRESS.output(&ctx, &flow, 0);
