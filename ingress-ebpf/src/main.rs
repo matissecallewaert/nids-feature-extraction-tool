@@ -84,18 +84,10 @@ fn try_xdp_flow_track(ctx: XdpContext) -> Result<u32, ()>{
         ipv4_source: ipv4_source,
         port_destination: destination_port,
         port_source: source_port,
-        fin_flag: 0,
         length: 0,
         protocol: 0,
         header_length: 0,
         data_length: 0,
-        syn_flag: 0,
-        rst_flag: 0,
-        psh_flag: 0,
-        ack_flag: 0,
-        urg_flag: 0,
-        cwr_flag: 0,
-        ece_flag: 0,
         combined_flags: 0,
     };
 

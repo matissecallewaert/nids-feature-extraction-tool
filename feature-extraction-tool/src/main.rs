@@ -138,29 +138,21 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
                     let header_length = data.header_length;
                     let data_length = data.data_length;
                     let length = data.length;
-                    let fin_flag = data.fin_flag;
-                    let syn_flag = data.syn_flag;
-                    let rst_flag = data.rst_flag;
-                    let psh_flag = data.psh_flag;
-                    let ack_flag = data.ack_flag;
-                    let urg_flag = data.urg_flag;
-                    let cwr_flag = data.cwr_flag;
-                    let ece_flag = data.ece_flag;
 
                     let combined_flags = data.combined_flags;
 
-                    let fin_flag_flags = combined_flags & 0b00000001;
-                    let syn_flag_flags = combined_flags & 0b00000010;
-                    let rst_flag_flags = combined_flags & 0b00000100;
-                    let psh_flag_flags = combined_flags & 0b00001000;
-                    let ack_flag_flags = combined_flags & 0b00010000;
-                    let urg_flag_flags = combined_flags & 0b00100000;
-                    let ece_flag_flags = combined_flags & 0b01000000;
-                    let cwr_flag_flags = combined_flags & 0b10000000;
+                    let fin_flag_flags = ((combined_flags & 0b00000001) != 0) as u8;
+                    let syn_flag_flags = ((combined_flags & 0b00000010) != 0) as u8;
+                    let rst_flag_flags = ((combined_flags & 0b00000100) != 0) as u8;
+                    let psh_flag_flags = ((combined_flags & 0b00001000) != 0) as u8;
+                    let ack_flag_flags = ((combined_flags & 0b00010000) != 0) as u8;
+                    let urg_flag_flags = ((combined_flags & 0b00100000) != 0) as u8;
+                    let ece_flag_flags = ((combined_flags & 0b01000000) != 0) as u8;
+                    let cwr_flag_flags = ((combined_flags & 0b10000000) != 0) as u8;
 
                     println!(
-                        "LOG: SRC {}:{}, DST {}:{}, FIN {}:{}, SYN {}:{}, RST {}:{}, PSH {}:{}, ACK {}:{}, URG {}:{}, CWR {}:{}, ECE {}:{}, , PROTOCOL {}, HEADER LENGTH {}, DATA LENGTH {}, LENGTH {}",
-                        src_addr, src_port, dst_addr, dst_port, fin_flag, fin_flag_flags, syn_flag, syn_flag_flags, rst_flag, rst_flag_flags, psh_flag, psh_flag_flags, ack_flag, ack_flag_flags, urg_flag, urg_flag_flags, cwr_flag, cwr_flag_flags, ece_flag, ece_flag_flags, protocol, header_length, data_length, length
+                        "LOG: SRC {}:{}, DST {}:{}, FIN {}, SYN {}, RST {}, PSH {}, ACK {}, URG {}, CWR {}, ECE {}, PROTOCOL {}, HEADER LENGTH {}, DATA LENGTH {}, LENGTH {}",
+                        src_addr, src_port, dst_addr, dst_port, fin_flag_flags, syn_flag_flags, rst_flag_flags, psh_flag_flags, ack_flag_flags, urg_flag_flags, cwr_flag_flags, ece_flag_flags, protocol, header_length, data_length, length
                     );
                 }
             }

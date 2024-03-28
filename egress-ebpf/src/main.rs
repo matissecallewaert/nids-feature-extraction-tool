@@ -63,15 +63,6 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
     let source_port;
     let destination_port;
 
-    let fin_flag: u8;
-    let syn_flag: u8;
-    let rst_flag: u8;
-    let psh_flag: u8;
-    let ack_flag: u8;
-    let urg_flag: u8;
-    let cwr_flag: u8;
-    let ece_flag: u8;
-
     let combined_flags: u8;
 
     let header_length: u8;
@@ -98,14 +89,14 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
             source_port = u16::from_be(tcphdr.source);
             destination_port = u16::from_be(tcphdr.dest);
 
-            fin_flag = tcphdr.fin() as u8;
-            syn_flag = tcphdr.syn() as u8;
-            rst_flag = tcphdr.rst() as u8;
-            psh_flag = tcphdr.psh() as u8;
-            ack_flag = tcphdr.ack() as u8;
-            urg_flag = tcphdr.urg() as u8;
-            cwr_flag = tcphdr.cwr() as u8;
-            ece_flag = tcphdr.ece() as u8;
+            let fin_flag = tcphdr.fin() as u8;
+            let syn_flag = tcphdr.syn() as u8;
+            let rst_flag = tcphdr.rst() as u8;
+            let psh_flag = tcphdr.psh() as u8;
+            let ack_flag = tcphdr.ack() as u8;
+            let urg_flag = tcphdr.urg() as u8;
+            let cwr_flag = tcphdr.cwr() as u8;
+            let ece_flag = tcphdr.ece() as u8;
 
             combined_flags = (fin_flag << 0) | (syn_flag << 1) | (rst_flag << 2) | 
                          (psh_flag << 3) | (ack_flag << 4) | (urg_flag << 5) | 
@@ -123,15 +114,6 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
                 + Ipv4Hdr::LEN as u16
                 + EthHdr::LEN as u16;
 
-            fin_flag = 0;
-            syn_flag = 0;
-            rst_flag = 0;
-            psh_flag = 0;
-            ack_flag = 0;
-            urg_flag = 0;
-            cwr_flag = 0;
-            ece_flag = 0;
-
             combined_flags = 0;
         }
         _ => return Ok(TC_ACT_PIPE),
@@ -142,14 +124,6 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
         ipv4_source: ipv4_source,
         port_destination: destination_port,
         port_source: source_port,
-        fin_flag: fin_flag,
-        syn_flag: syn_flag,
-        rst_flag: rst_flag,
-        psh_flag: psh_flag,
-        ack_flag: ack_flag,
-        urg_flag: urg_flag,
-        cwr_flag: cwr_flag,
-        ece_flag: ece_flag,
         combined_flags: combined_flags,
         length: length,
         protocol: protocol,
