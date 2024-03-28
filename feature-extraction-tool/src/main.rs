@@ -14,9 +14,9 @@ use aya::{
     maps::AsyncPerfEventArray,
     programs::{tc, SchedClassifier, TcAttachType, Xdp, XdpFlags},
     util::online_cpus,
-    Bpf,
+    Ebpf,
 };
-use aya_log::BpfLogger;
+use aya_log::EbpfLogger;
 use bytes::BytesMut;
 use clap::Parser;
 use common::PacketLog;
@@ -51,33 +51,33 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
 
     // Loading the eBPF program for egress, the macros make sure the correct file is loaded
     #[cfg(debug_assertions)]
-    let mut bpf_egress = Bpf::load(include_bytes_aligned!(
+    let mut bpf_egress = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/debug/feature-extraction-tool-egress"
     ))?;
     #[cfg(not(debug_assertions))]
-    let mut bpf_egress = Bpf::load(include_bytes_aligned!(
+    let mut bpf_egress = Ebpf::load(include_bytes_aligned!(
         "../../target/bpfel-unknown-none/release/feature-extraction-tool-egress"
     ))?;
 
     // Loading the eBPF program for ingress, the macros make sure the correct file is loaded
-    #[cfg(debug_assertions)]
-    let mut bpf_ingress = Bpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/debug/feature-extraction-tool-ingress"
-    ))?;
-    #[cfg(not(debug_assertions))]
-    let mut bpf_ingress = Bpf::load(include_bytes_aligned!(
-        "../../target/bpfel-unknown-none/release/feature-extraction-tool-ingress"
-    ))?;
+    // #[cfg(debug_assertions)]
+    // let mut bpf_ingress = Ebpf::load(include_bytes_aligned!(
+    //     "../../target/bpfel-unknown-none/debug/feature-extraction-tool-ingress"
+    // ))?;
+    // #[cfg(not(debug_assertions))]
+    // let mut bpf_ingress = Ebpf::load(include_bytes_aligned!(
+    //     "../../target/bpfel-unknown-none/release/feature-extraction-tool-ingress"
+    // ))?;
 
     // You can remove this when you don't log anything in your egress eBPF program.
-    if let Err(e) = BpfLogger::init(&mut bpf_egress) {
+    if let Err(e) = EbpfLogger::init(&mut bpf_egress) {
         warn!("failed to initialize the egress eBPF logger: {}", e);
     }
 
     // You can remove this when you don't log anything in your ingress eBPF program.
-    if let Err(e) = BpfLogger::init(&mut bpf_ingress) {
-        warn!("failed to initialize the ingress eBPF logger: {}", e);
-    }
+    // if let Err(e) = EbpfLogger::init(&mut bpf_ingress) {
+    //     warn!("failed to initialize the ingress eBPF logger: {}", e);
+    // }
 
     // Loading and attaching the eBPF program function for egress
     let _ = tc::qdisc_add_clsact(interface.as_str());
@@ -89,20 +89,20 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
     program_egress.attach(&interface, TcAttachType::Egress)?;
 
     // Loading and attaching the eBPF program function for ingress
-    let program_ingress: &mut Xdp = bpf_ingress
-        .program_mut("xdp_flow_track")
-        .unwrap()
-        .try_into()?;
-    program_ingress.load()?;
-    program_ingress.attach(&interface, XdpFlags::default())
-        .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
+    // let program_ingress: &mut Xdp = bpf_ingress
+    //     .program_mut("xdp_flow_track")
+    //     .unwrap()
+    //     .try_into()?;
+    // program_ingress.load()?;
+    // program_ingress.attach(&interface, XdpFlags::default())
+    //     .context("failed to attach the XDP program with default flags - try changing XdpFlags::default() to XdpFlags::SKB_MODE")?;
 
     // Attach to the event arrays
     let mut flows_egress =
         AsyncPerfEventArray::try_from(bpf_egress.take_map("EVENTS_EGRESS").unwrap())?;
 
-    let mut flows_ingress =
-        AsyncPerfEventArray::try_from(bpf_ingress.take_map("EVENTS_INGRESS").unwrap())?;
+    // let mut flows_ingress =
+    //     AsyncPerfEventArray::try_from(bpf_ingress.take_map("EVENTS_INGRESS").unwrap())?;
 
     // Use all online CPUs to process the events in the user space
     for cpu_id in online_cpus()? {
@@ -123,8 +123,8 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
                     let dst_addr = Ipv4Addr::from(data.ipv4_destination);
                     let src_port = data.port_source;
                     let dst_port = data.port_destination;
-
-                    info!(
+                    
+                    println!(
                         "LOG: SRC {}:{}, DST {}:{}",
                         src_addr, src_port, dst_addr, dst_port
                     );
@@ -132,30 +132,30 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
             }
         });
 
-        let mut buf_ingress = flows_ingress.open(cpu_id, None)?;
-        task::spawn(async move {
-            let mut buffers = (0..10)
-                .map(|_| BytesMut::with_capacity(1024))
-                .collect::<Vec<_>>();
+        // let mut buf_ingress = flows_ingress.open(cpu_id, None)?;
+        // task::spawn(async move {
+        //     let mut buffers = (0..10)
+        //         .map(|_| BytesMut::with_capacity(1024))
+        //         .collect::<Vec<_>>();
 
-            loop {
-                let events = buf_ingress.read_events(&mut buffers).await.unwrap();
-                for buf in buffers.iter_mut().take(events.read) {
-                    let ptr = buf.as_ptr() as *const PacketLog;
-                    let data = unsafe { ptr.read_unaligned() };
+        //     loop {
+        //         let events = buf_ingress.read_events(&mut buffers).await.unwrap();
+        //         for buf in buffers.iter_mut().take(events.read) {
+        //             let ptr = buf.as_ptr() as *const PacketLog;
+        //             let data = unsafe { ptr.read_unaligned() };
 
-                    let src_addr = Ipv4Addr::from(data.ipv4_source);
-                    let dst_addr = Ipv4Addr::from(data.ipv4_destination);
-                    let src_port = data.port_source;
-                    let dst_port = data.port_destination;
+        //             let src_addr = Ipv4Addr::from(data.ipv4_source);
+        //             let dst_addr = Ipv4Addr::from(data.ipv4_destination);
+        //             let src_port = data.port_source;
+        //             let dst_port = data.port_destination;
 
-                    info!(
-                        "LOG: SRC {}:{}, DST {}:{}",
-                        src_addr, src_port, dst_addr, dst_port
-                    );
-                }
-            }
-        });
+        //             info!(
+        //                 "LOG: SRC {}:{}, DST {}:{}",
+        //                 src_addr, src_port, dst_addr, dst_port
+        //             );
+        //         }
+        //     }
+        // });
     }
 
     info!("Waiting for Ctrl-C...");

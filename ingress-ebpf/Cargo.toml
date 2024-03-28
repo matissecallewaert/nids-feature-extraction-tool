@@ -4,10 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-aya-bpf = { git = "https://github.com/aya-rs/aya" }
+aya-ebpf = { git = "https://github.com/aya-rs/aya" }
 aya-log-ebpf = { git = "https://github.com/aya-rs/aya" }
 common = { path = "../common" }
-network-types = "0.0.4"
+network-types = "0.0.5"
 
 [[bin]]
 name = "feature-extraction-tool-ingress"

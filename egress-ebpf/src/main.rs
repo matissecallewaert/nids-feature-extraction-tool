@@ -2,7 +2,7 @@
 #![no_main]
 #![allow(nonstandard_style, dead_code)]
 
-use aya_bpf::{
+use aya_ebpf::{
     bindings::TC_ACT_PIPE,
     macros::{classifier, map},
     maps::PerfEventArray,
