@@ -89,18 +89,9 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
             source_port = tcphdr.source;
             destination_port = tcphdr.dest;
 
-            let fin_flag = tcphdr.fin() as u8;
-            let syn_flag = tcphdr.syn() as u8;
-            let rst_flag = tcphdr.rst() as u8;
-            let psh_flag = tcphdr.psh() as u8;
-            let ack_flag = tcphdr.ack() as u8;
-            let urg_flag = tcphdr.urg() as u8;
-            let cwr_flag = tcphdr.cwr() as u8;
-            let ece_flag = tcphdr.ece() as u8;
-
-            combined_flags = (fin_flag << 0) | (syn_flag << 1) | (rst_flag << 2) | 
-                         (psh_flag << 3) | (ack_flag << 4) | (urg_flag << 5) | 
-                         (ece_flag << 6) | (cwr_flag << 7);
+            combined_flags = ((tcphdr.fin() as u8) << 0) | ((tcphdr.syn() as u8) << 1) | ((tcphdr.rst() as u8) << 2) | 
+                         ((tcphdr.psh() as u8) << 3) | ((tcphdr.ack() as u8) << 4) | ((tcphdr.urg() as u8) << 5) | 
+                         ((tcphdr.ece() as u8) << 6) | ((tcphdr.cwr() as u8) << 7);
             
             window_size = tcphdr.window;
 
