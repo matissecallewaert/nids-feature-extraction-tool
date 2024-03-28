@@ -123,15 +123,15 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
                     let dst_addr = Ipv4Addr::from(data.ipv4_destination);
                     let src_port = data.port_source;
                     let dst_port = data.port_destination;
-                    let protocol = data.protocol;
-                    let header_length = data.header_length;
-                    let data_length = data.data_length;
+                    // let protocol = data.protocol;
+                    // let header_length = data.header_length;
+                    // let data_length = data.data_length;
                     //let length = data.length;
                     let fin_flag = data.fin_flag;
 
                     println!(
-                        "LOG: SRC {}:{}, DST {}:{}, PROTOCOL {}, HEADER LENGTH {}, D_LENGTH {}, FIN {}",
-                        src_addr, src_port, dst_addr, dst_port, protocol, header_length, data_length, fin_flag
+                        "LOG: SRC {}:{}, DST {}:{}, FIN {}",
+                        src_addr, src_port, dst_addr, dst_port, fin_flag
                     );
                 }
             }
