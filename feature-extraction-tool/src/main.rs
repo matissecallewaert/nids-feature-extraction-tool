@@ -144,11 +144,23 @@ async fn handle_realtime(interface: String) -> Result<(), anyhow::Error> {
                     let psh_flag = data.psh_flag;
                     let ack_flag = data.ack_flag;
                     let urg_flag = data.urg_flag;
-                    //let cwr_flag = data.cwr_flag;
+                    let cwr_flag = data.cwr_flag;
+                    let ece_flag = data.ece_flag;
+
+                    let combined_flags = data.combined_flags;
+
+                    let fin_flag_flags = combined_flags & 0b00000001;
+                    let syn_flag_flags = combined_flags & 0b00000010;
+                    let rst_flag_flags = combined_flags & 0b00000100;
+                    let psh_flag_flags = combined_flags & 0b00001000;
+                    let ack_flag_flags = combined_flags & 0b00010000;
+                    let urg_flag_flags = combined_flags & 0b00100000;
+                    let ece_flag_flags = combined_flags & 0b01000000;
+                    let cwr_flag_flags = combined_flags & 0b10000000;
 
                     println!(
-                        "LOG: SRC {}:{}, DST {}:{}, FIN {}, SYN {}, RST {} PSH {}, ACK {}, URG {}, PROTOCOL {}, HEADER LENGTH {}, DATA LENGTH {}, LENGTH {}",
-                        src_addr, src_port, dst_addr, dst_port, fin_flag, syn_flag, rst_flag, psh_flag, ack_flag, urg_flag, protocol, header_length, data_length, length
+                        "LOG: SRC {}:{}, DST {}:{}, FIN {}:{}, SYN {}:{}, RST {}:{}, PSH {}:{}, ACK {}:{}, URG {}:{}, CWR {}:{}, ECE {}:{}, , PROTOCOL {}, HEADER LENGTH {}, DATA LENGTH {}, LENGTH {}",
+                        src_addr, src_port, dst_addr, dst_port, fin_flag, fin_flag_flags, syn_flag, syn_flag_flags, rst_flag, rst_flag_flags, psh_flag, psh_flag_flags, ack_flag, ack_flag_flags, urg_flag, urg_flag_flags, cwr_flag, cwr_flag_flags, ece_flag, ece_flag_flags, protocol, header_length, data_length, length
                     );
                 }
             }
