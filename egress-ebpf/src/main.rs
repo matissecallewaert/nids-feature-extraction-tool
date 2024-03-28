@@ -138,7 +138,7 @@ fn try_tc_flow_track(ctx: TcContext) -> Result<i32, ()> {
         psh_flag: psh_flag,
         ack_flag: ack_flag,
         urg_flag: urg_flag,
-        cwr_flag: cwr_flag,
+        //cwr_flag: cwr_flag,
         length: length,
         protocol: protocol,
         header_length: header_length,

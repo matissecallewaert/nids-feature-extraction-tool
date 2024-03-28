@@ -94,7 +94,7 @@ fn try_xdp_flow_track(ctx: XdpContext) -> Result<u32, ()>{
         psh_flag: 0,
         ack_flag: 0,
         urg_flag: 0,
-        cwr_flag: 0,
+        //cwr_flag: 0,
     };
 
     // the zero value is a flag
