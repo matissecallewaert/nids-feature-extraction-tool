@@ -193,6 +193,18 @@ impl Flow for BasicFlow {
         )
     }
 
+    fn get_features() -> String {
+        format!(
+            "FLOW_ID,IP_SOURCE,PORT_SOURCE,IP_DESTINATION,PORT_DESTINATION,PROTOCOL,\
+            FIRST_TIMESTAMP,LAST_TIMESTAMP,DURATION,FLOW_END_OF_FLOW_ACK,\
+            FWD_FIN_FLAG_COUNT,FWD_SYN_FLAG_COUNT,FWD_RST_FLAG_COUNT,FWD_PSH_FLAG_COUNT,\
+            FWD_ACK_FLAG_COUNT,FWD_URG_FLAG_COUNT,FWD_CWE_FLAG_COUNT,FWD_ECE_FLAG_COUNT,\
+            FWD_PACKET_COUNT,BWD_FIN_FLAG_COUNT,BWD_SYN_FLAG_COUNT,BWD_RST_FLAG_COUNT,\
+            BWD_PSH_FLAG_COUNT,BWD_ACK_FLAG_COUNT,BWD_URG_FLAG_COUNT,BWD_CWE_FLAG_COUNT,\
+            BWD_ECE_FLAG_COUNT,BWD_PACKET_COUNT"
+        )
+    }
+
     fn dump_without_contamination(&self) -> String {
         format!(
             "{},{},{},{},{},{},{},{},{},{},{},{},{},\
@@ -218,6 +230,17 @@ impl Flow for BasicFlow {
             self.bwd_cwe_flag_count,
             self.bwd_ece_flag_count,
             self.bwd_packet_count
+        )
+    }
+
+    fn get_features_without_contamination() -> String {
+        format!(
+            "PROTOCOL,DURATION,FLOW_END_OF_FLOW_ACK,\
+            FWD_FIN_FLAG_COUNT,FWD_SYN_FLAG_COUNT,FWD_RST_FLAG_COUNT,FWD_PSH_FLAG_COUNT,\
+            FWD_ACK_FLAG_COUNT,FWD_URG_FLAG_COUNT,FWD_CWE_FLAG_COUNT,FWD_ECE_FLAG_COUNT,\
+            FWD_PACKET_COUNT,BWD_FIN_FLAG_COUNT,BWD_SYN_FLAG_COUNT,BWD_RST_FLAG_COUNT,\
+            BWD_PSH_FLAG_COUNT,BWD_ACK_FLAG_COUNT,BWD_URG_FLAG_COUNT,BWD_CWE_FLAG_COUNT,\
+            BWD_ECE_FLAG_COUNT,BWD_PACKET_COUNT"
         )
     }
 

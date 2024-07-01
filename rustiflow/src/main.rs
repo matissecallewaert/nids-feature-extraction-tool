@@ -77,6 +77,7 @@ async fn main() {
             export_method,
             lifespan,
             no_contaminant_features,
+            feature_header,
             only_ingress,
             interval,
         } => {
@@ -141,9 +142,14 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    if let Err(err) =
-                        handle_realtime::<BasicFlow>(interface, interval, lifespan, only_ingress)
-                            .await
+                    if let Err(err) = handle_realtime::<BasicFlow>(
+                        interface,
+                        interval,
+                        lifespan,
+                        only_ingress,
+                        feature_header,
+                    )
+                    .await
                     {
                         error!("Error: {:?}", err);
                     }
@@ -154,9 +160,14 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    if let Err(err) =
-                        handle_realtime::<CicFlow>(interface, interval, lifespan, only_ingress)
-                            .await
+                    if let Err(err) = handle_realtime::<CicFlow>(
+                        interface,
+                        interval,
+                        lifespan,
+                        only_ingress,
+                        feature_header,
+                    )
+                    .await
                     {
                         error!("Error: {:?}", err);
                     }
@@ -167,9 +178,14 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    if let Err(err) =
-                        handle_realtime::<CiddsFlow>(interface, interval, lifespan, only_ingress)
-                            .await
+                    if let Err(err) = handle_realtime::<CiddsFlow>(
+                        interface,
+                        interval,
+                        lifespan,
+                        only_ingress,
+                        feature_header,
+                    )
+                    .await
                     {
                         error!("Error: {:?}", err);
                     }
@@ -180,8 +196,14 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    if let Err(err) =
-                        handle_realtime::<NfFlow>(interface, interval, lifespan, only_ingress).await
+                    if let Err(err) = handle_realtime::<NfFlow>(
+                        interface,
+                        interval,
+                        lifespan,
+                        only_ingress,
+                        feature_header,
+                    )
+                    .await
                     {
                         error!("Error: {:?}", err);
                     }
@@ -192,9 +214,14 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    if let Err(err) =
-                        handle_realtime::<NTLFlow>(interface, interval, lifespan, only_ingress)
-                            .await
+                    if let Err(err) = handle_realtime::<NTLFlow>(
+                        interface,
+                        interval,
+                        lifespan,
+                        only_ingress,
+                        feature_header,
+                    )
+                    .await
                     {
                         error!("Error: {:?}", err);
                     }
@@ -205,9 +232,14 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    if let Err(err) =
-                        handle_realtime::<CustomFlow>(interface, interval, lifespan, only_ingress)
-                            .await
+                    if let Err(err) = handle_realtime::<CustomFlow>(
+                        interface,
+                        interval,
+                        lifespan,
+                        only_ingress,
+                        feature_header,
+                    )
+                    .await
                     {
                         error!("Error: {:?}", err);
                     }
@@ -219,6 +251,7 @@ async fn main() {
             flow_type,
             lifespan,
             no_contaminant_features,
+            feature_header,
             export_method,
         } => {
             let mut ncf = NO_CONTAMINANT_FEATURES.lock().unwrap();
@@ -272,7 +305,7 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    read_pcap_file::<BasicFlow>(&path, lifespan).await
+                    read_pcap_file::<BasicFlow>(&path, lifespan, feature_header).await
                 }
                 FlowType::CicFlow => {
                     info!("Selecting the CIC flow type...");
@@ -280,7 +313,7 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    read_pcap_file::<CicFlow>(&path, lifespan).await
+                    read_pcap_file::<CicFlow>(&path, lifespan, feature_header).await
                 }
                 FlowType::CiddsFlow => {
                     info!("Selecting the CIDDS flow type...");
@@ -288,7 +321,7 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    read_pcap_file::<CiddsFlow>(&path, lifespan).await
+                    read_pcap_file::<CiddsFlow>(&path, lifespan, feature_header).await
                 }
                 FlowType::NfFlow => {
                     info!("Selecting the NF flow type...");
@@ -296,7 +329,7 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    read_pcap_file::<NfFlow>(&path, lifespan).await
+                    read_pcap_file::<NfFlow>(&path, lifespan, feature_header).await
                 }
                 FlowType::NtlFlow => {
                     info!("Selecting the Ntl flow type...");
@@ -304,7 +337,7 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    read_pcap_file::<NTLFlow>(&path, lifespan).await
+                    read_pcap_file::<NTLFlow>(&path, lifespan, feature_header).await
                 }
                 FlowType::CustomFlow => {
                     info!("Selecting the custom flow type...");
@@ -312,7 +345,7 @@ async fn main() {
                     info!("Starting!");
                     info!("{UNDERLINE}");
 
-                    read_pcap_file::<CustomFlow>(&path, lifespan).await
+                    read_pcap_file::<CustomFlow>(&path, lifespan, feature_header).await
                 }
             }
         }
@@ -324,6 +357,7 @@ async fn handle_realtime<T>(
     interval: Option<u64>,
     lifespan: u64,
     only_ingress: bool,
+    header: bool,
 ) -> Result<(), anyhow::Error>
 where
     T: Flow + Send + Sync + 'static,
@@ -605,6 +639,15 @@ where
     });
 
     info!("Waiting for Ctrl-C...");
+
+    if header {
+        if *NO_CONTAMINANT_FEATURES.lock().unwrap().deref() {
+            export(&T::get_features_without_contamination());
+        } else {
+            export(&T::get_features());
+        }
+    }
+
     signal::ctrl_c().await?;
 
     for entry in flow_map_ipv4.iter() {
@@ -625,7 +668,6 @@ where
         }
     }
 
-    // Making sure everything is flushed
     if let Some(export_file) = EXPORT_FILE.lock().unwrap().deref_mut() {
         export_file.flush()?;
     }
@@ -644,7 +686,7 @@ where
     Ok(())
 }
 
-async fn read_pcap_file<T>(path: &str, lifespan: u64)
+async fn read_pcap_file<T>(path: &str, lifespan: u64, header: bool)
 where
     T: Flow + Send + Sync + 'static,
 {
@@ -668,6 +710,13 @@ where
         }
     };
 
+    if header {
+        if *NO_CONTAMINANT_FEATURES.lock().unwrap().deref() {
+            export(&T::get_features_without_contamination());
+        } else {
+            export(&T::get_features());
+        }
+    }
     while let Ok(packet) = cap.next_packet() {
         let ts = packet.header.ts;
 
@@ -829,6 +878,10 @@ where
         } else {
             export(&flow.dump());
         }
+    }
+
+    if let Some(export_file) = EXPORT_FILE.lock().unwrap().deref_mut() {
+        let _ = export_file.flush();
     }
 
     info!("{UNDERLINE}");

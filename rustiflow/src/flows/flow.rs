@@ -85,4 +85,22 @@ pub trait Flow {
     ///
     /// Returns a `DateTime<Utc>` representing the first timestamp of the flow.
     fn get_first_timestamp(&self) -> DateTime<Utc>;
+
+    /// Returns a first record with the features of the flow.
+    ///
+    /// This method returns a string representation of the features of the flow.
+    ///
+    /// ### Returns
+    ///
+    /// Returns a `String` that represents the features of the flow.
+    fn get_features() -> String;
+
+    /// Returns a first record with the features of the flow without contaminant features.
+    ///
+    /// This method returns a string representation of the features of the flow without contaminant features.
+    ///
+    /// ### Returns
+    ///
+    /// Returns a `String` that represents the features of the flow without contaminant features.
+    fn get_features_without_contamination() -> String;
 }

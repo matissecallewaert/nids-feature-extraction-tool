@@ -24,6 +24,10 @@ pub enum Commands {
         #[clap(short, long, action = clap::ArgAction::SetTrue)]
         no_contaminant_features: bool,
 
+        /// Whether to add the header
+        #[clap(short, long, action = clap::ArgAction::SetTrue)]
+        feature_header: bool,
+
         /// Only ingress traffic will be captured
         #[clap(short, long, action = clap::ArgAction::SetTrue)]
         only_ingress: bool,
@@ -51,6 +55,10 @@ pub enum Commands {
         /// Whether not to include contaminant features
         #[clap(short, long, action = clap::ArgAction::SetTrue)]
         no_contaminant_features: bool,
+
+        /// Whether to add the header
+        #[clap(short, long, action = clap::ArgAction::SetTrue)]
+        feature_header: bool,
 
         /// Output method
         #[clap(flatten)]

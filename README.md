@@ -152,6 +152,9 @@ Make sure that you don't use docker desktop and that you don't have it installed
     -n, --no-contaminant-features
             Whether not to include contaminant features
 
+    -f, --feature-header
+            Whether to add the header
+
     -o, --only-ingress
             Only ingress traffic will be captured
 
@@ -202,6 +205,9 @@ Make sure that you don't use docker desktop and that you don't have it installed
   Options:
     -n, --no-contaminant-features
             Whether not to include contaminant features
+
+    -f, --feature-header
+            Whether to add the header
 
     -h, --help
             Print help (see a summary with '-h')

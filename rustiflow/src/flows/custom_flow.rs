@@ -67,8 +67,18 @@ impl Flow for CustomFlow {
         format!("")
     }
 
+    fn get_features() -> String {
+        // Add here the features of the custom flow.
+        format!("")
+    }
+
     fn dump_without_contamination(&self) -> String {
         // Add here the dump of the custom flow without contaminant features.
+        format!("")
+    }
+
+    fn get_features_without_contamination() -> String {
+        // Add here the features of the custom flow without contaminant features.
         format!("")
     }
 

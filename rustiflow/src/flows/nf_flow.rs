@@ -151,6 +151,21 @@ impl Flow for NfFlow {
         )
     }
 
+    fn get_features() -> String {
+        format!(
+            "FLOW_ID,IP_SRC,PORT_SRC,IP_DST,PORT_DST,PROTOCOL,FIRST_TS,LAST_TS,\
+            DURATION,FLOW_PKTS,FLOW_BYTES,FWD_FIRST_TS,FWD_LAST_TS,FWD_DURATION,FWD_PKTS,\
+            FWD_BYTES,BWD_FIRST_TS,BWD_LAST_TS,BWD_DURATION,BWD_PKTS,BWD_BYTES,FLOW_PKT_LEN_MIN,\
+            FLOW_PKT_LEN_MEAN,FLOW_PKT_LEN_STD,FLOW_PKT_LEN_MAX,FWD_PKT_LEN_MIN,FWD_PKT_LEN_MEAN,\
+            FWD_PKT_LEN_STD,FWD_PKT_LEN_MAX,BWD_PKT_LEN_MIN,BWD_PKT_LEN_MEAN,BWD_PKT_LEN_STD,\
+            BWD_PKT_LEN_MAX,FLOW_IAT_MIN,FLOW_IAT_MEAN,FLOW_IAT_STD,FLOW_IAT_MAX,FWD_IAT_MIN,\
+            FWD_IAT_MEAN,FWD_IAT_STD,FWD_IAT_MAX,BWD_IAT_MIN,BWD_IAT_MEAN,BWD_IAT_STD,\
+            BWD_IAT_MAX,FLOW_SYN,FLOW_CWE,FLOW_ECE,FLOW_URG,FLOW_ACK,FLOW_PSH,FLOW_RST,\
+            FLOW_FIN,FWD_SYN,FWD_CWE,FWD_ECE,FWD_URG,FWD_ACK,FWD_PSH,FWD_RST,FWD_FIN,\
+            BWD_SYN,BWD_CWE,BWD_ECE,BWD_URG,BWD_ACK,BWD_PSH,BWD_RST,BWD_FIN"
+        )
+    }
+
     fn dump_without_contamination(&self) -> String {
         format!(
             "{},{},{},{},{},{},{},{},{},{},{},{},{},\
@@ -247,6 +262,20 @@ impl Flow for NfFlow {
             self.cic_flow.basic_flow.bwd_psh_flag_count,
             self.cic_flow.basic_flow.bwd_rst_flag_count,
             self.cic_flow.basic_flow.bwd_fin_flag_count,
+        )
+    }
+
+    fn get_features_without_contamination() -> String {
+        format!(
+            "PROTOCOL,DURATION,FLOW_PKTS,FLOW_BYTES,FWD_DURATION,FWD_PKTS,FWD_BYTES,\
+            BWD_DURATION,BWD_PKTS,BWD_BYTES,FLOW_PKT_LEN_MIN,FLOW_PKT_LEN_MEAN,FLOW_PKT_LEN_STD,\
+            FLOW_PKT_LEN_MAX,FWD_PKT_LEN_MIN,FWD_PKT_LEN_MEAN,FWD_PKT_LEN_STD,FWD_PKT_LEN_MAX,\
+            BWD_PKT_LEN_MIN,BWD_PKT_LEN_MEAN,BWD_PKT_LEN_STD,BWD_PKT_LEN_MAX,FLOW_IAT_MIN,\
+            FLOW_IAT_MEAN,FLOW_IAT_STD,FLOW_IAT_MAX,FWD_IAT_MIN,FWD_IAT_MEAN,FWD_IAT_STD,\
+            FWD_IAT_MAX,BWD_IAT_MIN,BWD_IAT_MEAN,BWD_IAT_STD,BWD_IAT_MAX,FLOW_SYN,FLOW_CWE,\
+            FLOW_ECE,FLOW_URG,FLOW_ACK,FLOW_PSH,FLOW_RST,FLOW_FIN,FWD_SYN,FWD_CWE,FWD_ECE,\
+            FWD_URG,FWD_ACK,FWD_PSH,FWD_RST,FWD_FIN,BWD_SYN,BWD_CWE,BWD_ECE,BWD_URG,BWD_ACK,\
+            BWD_PSH,BWD_RST,BWD_FIN"
         )
     }
 
